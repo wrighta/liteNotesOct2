@@ -67,8 +67,7 @@ class NoteController extends Controller
      */
     public function show($uuid)
     {
-        $note = Note::where('uuid',$uuid)->where('user_id',Auth::id())->firstOrFail();
-        return view('notes.show')->with('note', $note);
+
     }
 
     /**
@@ -79,11 +78,7 @@ class NoteController extends Controller
      */
     public function edit($note)
     {
-        if($note->user_id != Auth::id()) {
-            return abort(403);
-        }
 
-        return view('notes.edit')->with('note', $note);
     }
 
     /**
