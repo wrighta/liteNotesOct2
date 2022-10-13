@@ -84,7 +84,7 @@ class NoteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($note)
+    public function edit(Note $note)
     {
         if($note->user_id != Auth::id()) {
             return abort(403);
@@ -100,12 +100,18 @@ class NoteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $note)
+    public function update(Request $request, Note $note)
     {
-        if(!$note->user->is(Auth::user())) {
+        // First ensure the user is authenticated to access this note - i.e. they own the Note
+        // if(!$note->user->is(Auth::user())) {
+        //     return abort(403);
+        // }
+
+        if($note->user_id != Auth::id()) {
             return abort(403);
         }
 
+        // experiment with other validation - especially when it comes to your CA.
         $request->validate([
             'title' => 'required|max:120',
             'text' => 'required'
