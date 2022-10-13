@@ -65,10 +65,10 @@ class NoteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($uuid)
+    public function show($id)
     {
-        $note = Note::where('uuid',$uuid)->where('user_id',Auth::id())->firstOrFail();
-        return view('notes.show')->with('note', $note);
+        // $note = Note::where('uuid',$id)->where('user_id',Auth::id())->firstOrFail();
+        // return view('notes.show')->with('note', $note);
     }
 
     /**
@@ -93,9 +93,23 @@ class NoteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $note)
     {
-        //
+        if(!$note->user->is(Auth::user())) {
+            return abort(403);
+        }
+
+        $request->validate([
+            'title' => 'required|max:120',
+            'text' => 'required'
+        ]);
+
+        $note->update([
+            'title' => $request->title,
+            'text' => $request->text
+        ]);
+
+        return to_route('notes.show', $note)->with('success','Note updated successfully');
     }
 
     /**
