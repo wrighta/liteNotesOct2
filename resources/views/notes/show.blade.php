@@ -7,6 +7,12 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <!--alert-success is a component which I created using php artisan make:component alert-success
+            have a look at the code in views/components/alert-success.blade.php -->
+            <x-alert-success>
+                {{ session('success') }}
+            </x-alert-success>
+
             <div class="flex">
                 <p class="opacity-70">
                     <strong>Created: </strong> {{ $note->created_at->diffForHumans() }}
