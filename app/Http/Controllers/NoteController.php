@@ -62,13 +62,20 @@ class NoteController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  Note  $note
      * @return \Illuminate\Http\Response
      */
-    public function show($uuid)
+    // Using Route Model Binding - I pass in the complete $note. therefore I don't need to get it from the database.
+    // if the ID or UUID was only passed in, then access to the database would be requred to get the complete object.
+    public function show(Note $note)
     {
-        $note = Note::where('uuid',$uuid)->where('user_id',Auth::id())->firstOrFail();
-        return view('notes.show')->with('note', $note);
+         // $note = Note::where('uuid',$uuid)->where('user_id',Auth::id())->firstOrFail();
+
+        // Only the user that owns the Note can access it.
+         if($note->user_id != Auth::id()) {
+            return abort(403);
+        }
+         return view('notes.show')->with('note', $note);
     }
 
     /**
